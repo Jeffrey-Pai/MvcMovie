@@ -3,6 +3,9 @@
 @{
     ViewData["Title"] = "Index";
 }
+<head>
+    <script src="~/js/site.js"></script>
+</head>
 
 <h1>Movies</h1>
 <p><a asp-action="Create" target="_blank">Create New</a></p>
@@ -33,7 +36,8 @@
     <thead class="table-dark ">
         <tr>
             <th>
-                <input type="checkbox" id="select-all" />all
+                <input type="checkbox" id="select-all">
+                <label for="select-all">Select</label>
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Movies[0].Title)
@@ -47,7 +51,9 @@
             <th>
                 @Html.DisplayNameFor(model => model.Movies[0].Price)
             </th>
-            <th></th>
+            <th>
+                Action
+            </th>
         </tr>
     </thead>
     <tbody>
@@ -55,7 +61,8 @@
         {
             <tr>
                 <td>
-                    <input type="checkbox" class="check-item" value="@item.Id" />
+                    <input type="checkbox" class="checkbox-item" id="@item.Id">
+                    @item.Id
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.Title)
@@ -73,9 +80,25 @@
                     <a asp-action="Edit" asp-route-id="@item.Id" target="_blank">Edit</a> |
                     <a asp-action="Details" asp-route-id="@item.Id" target="_blank">Details</a> |
                     <a asp-action="Delete" asp-route-id="@item.Id" target="_blank">Delete</a>
+                    <a asp-action="Delete" asp-route-id="85" target="_blank">Delete</a>
                 </td>
             </tr>
         }
-
     </tbody>
 </table>
+
+<button id="delete-selected" class="btn btn-danger" style="display:none;">Delete Selected</button>
+<button id="edit-selected" class="btn btn-primary" style="display:none;">Edit Selected</button>
+
+<script>
+    $(function () {
+        $('.check-item').click(function () {
+            if ($('.check-item:checked').length > 0) {
+                $('#delete-selected').show();
+                $('#edit-selected').show();
+            } else {
+                $('#delete-selected').hide();
+                $('#edit-selected').hide();
+            }
+        });
+        </script>
