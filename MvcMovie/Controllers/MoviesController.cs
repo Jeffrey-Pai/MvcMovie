@@ -182,6 +182,58 @@ namespace MvcMovie.Controllers
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
+        //批次刪除
+        /*
+         // GET: Movies/DeleteMultiple
+         public async Task<IActionResult> DeleteMultiple(int[] ids)
+         {
+             if (ids == null || ids.Length == 0)
+             {
+                 return NotFound();
+             }
+
+             var movies = await _context.Movie
+                 .Where(m => ids.Contains(m.Id))
+                 .ToListAsync();
+
+             if (movies == null || movies.Count == 0)
+             {
+                 return NotFound();
+             }
+
+             return View(movies);
+         }
+        */
+
+        // POST: Movies/DeleteMultiple
+        [HttpPost, ActionName("DeleteMultiple")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteMultipleConfirmed()
+        {
+            // 取得所有勾選的電影 id
+            List<int> selectedIds = Request.Form["checkboxs"]
+                                         .Select(int.Parse)
+                                         .ToList();
+
+            if (selectedIds.Count == 0)
+            {
+                return RedirectToAction(nameof(Index));
+            }
+
+            // 從資料庫中找到每個要刪除的電影，並刪除它們
+            foreach (int id in selectedIds)
+            {
+                var movie = await _context.Movie.FindAsync(id);
+                if (movie != null)
+                {
+                    _context.Movie.Remove(movie);
+                }
+            }
+
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
+        }
+
 
         private bool MovieExists(int id)
         {
